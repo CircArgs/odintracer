@@ -1,0 +1,15 @@
+#!/bin/zsh
+
+file="image.ppm"
+
+if [ -f "$file" ]; then
+  echo "File $file exists. Deleting..."
+  rm "$file"
+fi
+
+echo "Creating empty $file"
+touch "$file"
+
+odin run src
+
+chmod 777 "$file"
