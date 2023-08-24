@@ -7,10 +7,16 @@ cross :: proc(a, b: Vector3) -> Vector3 {
 	j := swizzle(a, 2, 0, 1, 3) * swizzle(b, 1, 2, 0, 3)
 	return i - j
 }
-
+dot :: #force_inline proc(a, b: Vector3) -> f32 {
+	temp:=a*b
+	return temp.x+temp.y+temp.z
+}
+norm_sqd :: proc(v: Vector3)->f32{
+	return dot(v, v)
+}
 norm :: proc(v: Vector3)->f32{
-	temp:=(v*v)
-	return math.sqrt(temp.x+temp.y+temp.z)
+
+	return math.sqrt(norm_sqd(v))
 }
 
 normalize :: proc(v: Vector3)->Vector3{
