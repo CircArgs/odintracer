@@ -12,21 +12,22 @@ Sphere ::struct{
 hit_sphere::proc(s: Sphere, r: types.Ray) -> Maybe(types.Hit) {
     oc := r.origin - s.center
     a := types.norm_sqd(r.direction)
-    b := 2.0 * types.dot(r.direction, oc)
+    b_h := types.dot(r.direction, oc)
     c := types.norm_sqd(oc) - s.radius * s.radius
-    discriminant := b * b - 4.0 * a * c
+    discriminant := b_h*b_h - a * c
     
     if discriminant < 0.0 {
         return nil
     }
     
     sqrt_discriminant := math.sqrt(discriminant)
-    t1 := (-b - sqrt_discriminant) / (2.0 * a)
-    t2 := (-b + sqrt_discriminant) / (2.0 * a)
+    t1 := (-b_h - sqrt_discriminant)
+    t2 := (-b_h + sqrt_discriminant)
     
     if t1 > t2 {
         t1, t2 = t2, t1
     }
+    t1=t1/a
     
     hit_point := r.origin + t1 * r.direction
     normal := (hit_point - s.center) / s.radius
