@@ -18,10 +18,10 @@ print_progress :: proc(p: f32) {
 }
 
 ray_color :: proc(ray: types.Ray, world: shapes.World) -> types.Color3 {
-	hit := shapes.hit(world, ray)
-	if hit != nil {
-		N:= hit.?.normal
-		return (types.Color3{N.x, N.y, N.z}+1.0)*0.5
+	hit := shapes.hit(world, ray, types.default_interval())
+	if hit != nil{
+		N := hit.?.normal
+		return (types.Color3{N.x, N.y, N.z} + 1.0) * 0.5
 	}
 	unit := types.normalize(ray.direction)
 	a := .5 * (unit.y + 1)
@@ -60,6 +60,7 @@ main :: proc() {
 
 	world := shapes.World{}
 	append(&world.hittables, shapes.new_sphere(Point3{0, 0, -1, 0}, 0.5))
+	append(&world.hittables, shapes.new_sphere(Point3{0, -100.5, -1, 0}, 100))
 
 	for j in 0 ..< image_height {
 		j := f32(j)

@@ -10,7 +10,7 @@ Sphere :: struct {
 	center:         types.Point3,
 }
 
-hit_sphere :: proc(s: Sphere, r: types.Ray) -> Maybe(types.Hit) {
+hit_sphere :: proc(s: Sphere, r: types.Ray, interval: types.Interval) -> Maybe(types.Hit) {
 	oc := r.origin - s.center
 	a := types.norm_sqd(r.direction)
 	b_h := types.dot(r.direction, oc)
@@ -22,18 +22,24 @@ hit_sphere :: proc(s: Sphere, r: types.Ray) -> Maybe(types.Hit) {
 	}
 
 	sqrt_discriminant := math.sqrt(discriminant)
-	t1 := (-b_h - sqrt_discriminant)
-	t2 := (-b_h + sqrt_discriminant)
+	t1 := (-b_h - sqrt_discriminant) / a
+	t2 := (-b_h + sqrt_discriminant) / a
 
 	if t1 > t2 {
 		t1, t2 = t2, t1
 	}
-	t1 = t1 / a
+
+	if types.interval_contains(interval, t1) {} else if types.interval_contains(interval, t2) {
+		t1, t2 = t2, t1
+	} else {
+		return nil
+	}
+
 
 	hit_point := r.origin + t1 * r.direction
 	normal := (hit_point - s.center) / s.radius
 
-	outward := types.dot(normal, r.direction)>0.0
+	outward := types.dot(normal, r.direction) > 0.0
 	return types.Hit{distance = t1, point = hit_point, normal = normal, outward = outward}
 }
 
