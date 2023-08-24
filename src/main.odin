@@ -20,7 +20,8 @@ print_progress :: proc(p: f32) {
 ray_color :: proc(ray: types.Ray, sphere: shapes.Sphere) -> types.Color3 {
 	hit := shapes.hit_sphere(sphere, ray)
 	if hit != nil {
-		return types.Color3{1, 0, 0}
+		N:= hit.?.normal
+		return (types.Color3{N.x, N.y, N.z}+1.0)*0.5
 	}
 	unit := types.normalize(ray.direction)
 	a := .5 * (unit.y + 1)
