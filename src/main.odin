@@ -17,8 +17,8 @@ print_progress :: proc(p: f32) {
 	fmt.printf(" {}%%\r", pcnt)
 }
 
-ray_color :: proc(ray: types.Ray, hittable: shapes.Hittable) -> types.Color3 {
-	hit := shapes.hit(hittable, ray)
+ray_color :: proc(ray: types.Ray, world: shapes.World) -> types.Color3 {
+	hit := shapes.hit(world, ray)
 	if hit != nil {
 		N:= hit.?.normal
 		return (types.Color3{N.x, N.y, N.z}+1.0)*0.5
@@ -58,7 +58,8 @@ main :: proc() {
 
 	fmt.fprintf(f, "P3\n{} {}\n255\n", image_width, image_height)
 
-	sphere := shapes.new_sphere(Point3{0, 0, -1, 0}, 0.5)
+	world := shapes.World{}
+	append(&world.hittables, shapes.new_sphere(Point3{0, 0, -1, 0}, 0.5))
 
 	for j in 0 ..< image_height {
 		j := f32(j)
@@ -70,7 +71,7 @@ main :: proc() {
 				origin    = camera_center,
 				direction = ray_direction,
 			}
-			pixel_color := ray_color(r, sphere^)
+			pixel_color := ray_color(r, world)
 			write_color(pixel_color, f)
 		}
 		print_progress(j / f32(image_height))

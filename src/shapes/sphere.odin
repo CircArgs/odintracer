@@ -5,10 +5,9 @@ import "core:fmt"
 import "../types"
 
 Sphere :: struct {
-    using hittable: Hittable,
+	using hittable: Hittable,
 	radius:         f32,
 	center:         types.Point3,
-	
 }
 
 hit_sphere :: proc(s: Sphere, r: types.Ray) -> Maybe(types.Hit) {
@@ -34,13 +33,14 @@ hit_sphere :: proc(s: Sphere, r: types.Ray) -> Maybe(types.Hit) {
 	hit_point := r.origin + t1 * r.direction
 	normal := (hit_point - s.center) / s.radius
 
-	return types.Hit{distance = t1, point = hit_point, normal = normal}
+	outward := types.dot(normal, r.direction)>0.0
+	return types.Hit{distance = t1, point = hit_point, normal = normal, outward = outward}
 }
 
-new_sphere::proc(center: types.Point3, radius: f32)->^Sphere{
-    h:=new(Sphere)
-    h.variant=h
-    h.center = center
-    h.radius = radius
-    return h
+new_sphere :: proc(center: types.Point3, radius: f32) -> ^Sphere {
+	h := new(Sphere)
+	h.variant = h
+	h.center = center
+	h.radius = radius
+	return h
 }
