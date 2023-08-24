@@ -10,6 +10,7 @@ fi
 echo "Creating empty $file"
 touch "$file"
 
-odin run src
+odin run src #-o:speed
+# ./src.bin
 
 chmod 777 "$file"
