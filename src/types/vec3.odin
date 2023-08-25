@@ -1,5 +1,6 @@
 package types
 import "core:math"
+import "core:math/rand"
 Vector3 :: [4]f32
 
 new_vector3 :: proc(x: f32 = 0.0, y: f32 = 0.0, z: f32 = 0.0) -> Vector3 {
@@ -27,6 +28,9 @@ normalize :: proc(v: Vector3) -> Vector3 {
 	return v / norm(v)
 }
 
+rand_vector3::proc()->Vector3{
+	return new_vector3(rand.float32(), rand.float32(), rand.float32())
+}
 
 Point3 :: Vector3
 

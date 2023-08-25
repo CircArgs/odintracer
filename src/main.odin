@@ -20,8 +20,7 @@ main :: proc() {
 	append(&world.hittables, shapes.new_sphere(types.new_point3(z=-1), 0.5))
 	append(&world.hittables, shapes.new_sphere(types.new_point3(y=-100.5, z=-1), 100))
 
-	camera:=new_camera(aspect_ratio=16.0/9.0, image_width=100)
-	fmt.println(camera)
+	camera:=new_camera(aspect_ratio=16.0/9.0, image_width=400, aa=25)
 	render(camera, world, f)
 
 }
