@@ -8,6 +8,10 @@ Interval :: struct{
 }
 
 interval_contains::proc(interval: Interval, v: f32)->bool{
+    return v>=interval.min && v<=interval.max
+}
+
+interval_surrounds::proc(interval: Interval, v: f32)->bool{
     return v>interval.min && v<interval.max
 }
 
