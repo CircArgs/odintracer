@@ -1,6 +1,7 @@
 package types
 import "core:math"
 import "core:math/rand"
+import "../utils"
 Vector3 :: [4]f32
 
 new_vector3 :: proc(x: f32 = 0.0, y: f32 = 0.0, z: f32 = 0.0) -> Vector3 {
@@ -28,8 +29,26 @@ normalize :: proc(v: Vector3) -> Vector3 {
 	return v / norm(v)
 }
 
-rand_vector3::proc()->Vector3{
-	return new_vector3(rand.float32(), rand.float32(), rand.float32())
+rand_vector3::proc(min:f32 = -1.0, max: f32=1.0)->Vector3{
+	return new_vector3(utils.random_range(min, max), utils.random_range(min, max), utils.random_range(min, max))
+}
+rand_unit_vector3::proc()->Vector3{
+	return normalize(rand_vector3())
+}
+
+random_vector3_on_hemisphere::proc(normal: Vector3)->Vector3{
+
+		test:=normalize(rand_vector3(-1, 1))
+		if dot(test, normal)>0{
+			return test
+		}
+		return -test
+	
+}
+
+reflect_vector3::proc(v: Vector3, normal: Vector3) -> Vector3{
+	unit:=-normalize(v)
+	return 2*normal-unit
 }
 
 Point3 :: Vector3

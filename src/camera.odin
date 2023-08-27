@@ -52,18 +52,30 @@ new_camera :: proc(
 	return
 }
 
-ray_color :: proc(ray: types.Ray, world: shapes.World) -> types.Color3 {
-	hit := shapes.hit(world, ray, types.default_interval())
-	if hit != nil {
-		N := hit.?.normal
-		return (types.Color3{N.x, N.y, N.z} + 1.0) * 0.5
-	}
+ray_color :: proc(
+	ray: types.Ray,
+	world: shapes.World,
+	max_hits: u32,
+	hits: u32 = 0,
+) -> types.Color3 {
+	if hits < max_hits {
+		hit := shapes.hit(world, ray, types.default_interval())
+		if hit != nil {
+			N := hit.?.normal
+			new_direction := types.rand_unit_vector3()+N
+			new_ray := types.Ray {
+				direction = new_direction,
+				origin    = hit.?.point,
+			}
+			return ray_color(new_ray, world, max_hits, hits + 1) * 0.5
+		}
+    }
 	unit := types.normalize(ray.direction)
 	a := .5 * (unit.y + 1)
 	return (1 - a) * (types.Color3{1, 1, 1}) + a * types.Color3{.5, .7, 1}
 }
 
-render :: proc(camera: Camera, world: shapes.World, handle: os.Handle) {
+render :: proc(camera: Camera, world: shapes.World, handle: os.Handle, max_hits: u32) {
 	fmt.fprintf(handle, "P3\n{} {}\n255\n", camera.image_width, camera.image_height)
 	for j in 0 ..< camera.image_height {
 		j := f32(j)
@@ -77,15 +89,16 @@ render :: proc(camera: Camera, world: shapes.World, handle: os.Handle) {
 				direction = ray_direction,
 			}
 
-			pixel_color := ray_color(r, world)
+			pixel_color := ray_color(r, world, max_hits)
 			for anti_alias in 0 ..< camera.aa {
-				r.direction = ray_direction+
-					(utils.random_range(-.5,.5)) * camera.pixel_delta_u +
-					(utils.random_range(-.5,.5)) * camera.pixel_delta_v
-				pixel_color += ray_color(r, world)
+				r.direction =
+					ray_direction +
+					(utils.random_range(-.5, .5)) * camera.pixel_delta_u +
+					(utils.random_range(-.5, .5)) * camera.pixel_delta_v
+				pixel_color += ray_color(r, world, max_hits)
 			}
 
-			pixel_color /= f32(camera.aa+1)
+			pixel_color /= f32(camera.aa + 1)
 			types.write_color(pixel_color, handle)
 		}
 		utils.print_progress(j / f32(camera.image_height))

@@ -11,6 +11,6 @@ print_progress :: proc(p: f32) {
 	fmt.printf(" {}%%\r", pcnt)
 }
 
-random_range::proc(min:f32 = 0.0, max:f32 = 1.0)->f32{
+random_range::#force_inline proc(min:f32 = 0.0, max:f32 = 1.0)->f32{
     return rand.float32()*(max-min)+min
 }

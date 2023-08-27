@@ -38,7 +38,7 @@ hit_sphere :: proc(s: Sphere, r: types.Ray, interval: types.Interval) -> Maybe(t
 
 	hit_point := r.origin + t1 * r.direction
 	normal := (hit_point - s.center) / s.radius
-
+    // fmt.println("norm", normal)
 	outward := types.dot(normal, r.direction) > 0.0
 	return types.Hit{distance = t1, point = hit_point, normal = normal, outward = outward}
 }

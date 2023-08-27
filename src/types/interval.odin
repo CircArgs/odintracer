@@ -16,7 +16,7 @@ interval_surrounds :: proc(interval: Interval, v: f32) -> bool {
 }
 
 default_interval :: proc() -> Interval {
-	return Interval{0, math.inf_f32(1)}
+	return Interval{0.001, math.inf_f32(1)}
 }
 
 interval_clamp :: proc(interval: Interval, x: f32) -> f32 {
