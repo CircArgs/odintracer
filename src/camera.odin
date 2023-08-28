@@ -61,13 +61,8 @@ ray_color :: proc(
 	if hits < max_hits {
 		hit := shapes.hit(world, ray, types.default_interval())
 		if hit != nil {
-			N := hit.?.normal
-			new_direction := types.rand_unit_vector3()+N
-			new_ray := types.Ray {
-				direction = new_direction,
-				origin    = hit.?.point,
-			}
-			return ray_color(new_ray, world, max_hits, hits + 1) * 0.5
+			attenuation, new_ray := types.scatter(ray, hit.?)
+			return attenuation*ray_color(new_ray, world, max_hits, hits + 1) * 0.5
 		}
     }
 	unit := types.normalize(ray.direction)

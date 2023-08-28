@@ -46,6 +46,11 @@ random_vector3_on_hemisphere::proc(normal: Vector3)->Vector3{
 	
 }
 
+near_zero::proc(v: Vector3)->bool{
+	s::1e-8
+	return v.x<s&&v.y<s&&v.z<s
+}
+
 reflect_vector3::proc(v: Vector3, normal: Vector3) -> Vector3{
 	unit:=-normalize(v)
 	return 2*normal-unit

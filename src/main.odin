@@ -15,10 +15,11 @@ main :: proc() {
 		os.exit(2)
 	}
 	defer os.close(f)
-
+    material_ground := types.new_lambertian(types.Color3{0.8, 0.8, 0.0});
+    material_center := types.new_lambertian(types.Color3{0.7, 0.3, 0.3});
 	world := shapes.World{}
-	append(&world.hittables, shapes.new_sphere(types.new_point3(z=-1), 0.5))
-	append(&world.hittables, shapes.new_sphere(types.new_point3(y=-100.5, z=-1), 100))
+	append(&world.hittables, shapes.new_sphere(types.new_point3(z=-1), 0.5, material_center))
+	append(&world.hittables, shapes.new_sphere(types.new_point3(y=-100.5, z=-1), 100, material_ground))
 
 	camera:=new_camera(aspect_ratio=16.0/9.0, image_width=400, aa=100)
 	render(camera, world, f, max_hits = 50)

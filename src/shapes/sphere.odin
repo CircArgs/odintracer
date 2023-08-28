@@ -8,6 +8,7 @@ Sphere :: struct {
 	using hittable: Hittable,
 	radius:         f32,
 	center:         types.Point3,
+    material: ^types.Material
 }
 
 hit_sphere :: proc(s: Sphere, r: types.Ray, interval: types.Interval) -> Maybe(types.Hit) {
@@ -40,13 +41,14 @@ hit_sphere :: proc(s: Sphere, r: types.Ray, interval: types.Interval) -> Maybe(t
 	normal := (hit_point - s.center) / s.radius
     // fmt.println("norm", normal)
 	outward := types.dot(normal, r.direction) > 0.0
-	return types.Hit{distance = t1, point = hit_point, normal = normal, outward = outward}
+	return types.Hit{distance = t1, point = hit_point, normal = normal, outward = outward, material=s.material}
 }
 
-new_sphere :: proc(center: types.Point3, radius: f32) -> ^Sphere {
+new_sphere :: proc(center: types.Point3, radius: f32, material: ^types.Material) -> ^Sphere {
 	h := new(Sphere)
 	h.variant = h
 	h.center = center
 	h.radius = radius
+    h.material=material
 	return h
 }
