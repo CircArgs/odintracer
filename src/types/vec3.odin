@@ -51,9 +51,13 @@ near_zero::proc(v: Vector3)->bool{
 	return v.x<s&&v.y<s&&v.z<s
 }
 
-reflect_vector3::proc(v: Vector3, normal: Vector3) -> Vector3{
-	unit:=-normalize(v)
-	return 2*normal-unit
+// reflect_vector3::proc(v: Vector3, normal: Vector3) -> Vector3{
+// 	unit:=-normalize(v)
+// 	return 2*normal-unit
+// }
+
+reflect_vector3::proc(v: Vector3, n: Vector3) -> Vector3 {
+    return v - 2.0 * dot(v, n) * n
 }
 
 Point3 :: Vector3
